@@ -20,12 +20,11 @@ const Stars = ({ rating }) => {
     let number = calculateStar(n);
     let fill = Math.floor(number);
     let half = number - Math.floor(number) ? 1 : 0;
-    let outline = 5 - fill - half;
-    return [
-      ...Array(fill).fill(<FaStar />),
-      ...Array(half).fill(<FaStarHalfAlt />),
-      ...Array(outline).fill(<FaRegStar />),
-    ];
+    let outline = 5 - Math.ceil(number);
+    let fillStar = Array(fill).fill().map((_, inx) => <FaStar key={`fill-${inx}`} />);
+    let halfStar = Array(half).fill().map((_, inx) => <FaStarHalfAlt key={`half-${inx}`} />);
+    let outlineStar = Array(outline).fill().map((_, inx) => <FaRegStar key={`outline-${inx}`} />);
+    return [...fillStar, ...halfStar, ...outlineStar];
   };
   return setStar(rating);
 };
