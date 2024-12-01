@@ -1,12 +1,12 @@
 import "./App.css";
-import Section from "./components/Section";
+import Signup_Signin from "./components/Signup_Signin";
 import Product from "./components/Product";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import "swiper/css";
 
 function App() {
   return (
     <>
+      <Signup_Signin />
       <Product />
     </>
   );

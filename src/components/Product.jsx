@@ -6,38 +6,15 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import Stars from "./Stars";
+import Product_Modal from "./Product_Modal"; // MODAL KOMPONENTASINI IMPORT QILISH
 
 const API_URL = "https://fakestoreapi.com";
 
 const Product = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
-
-  // function calculateStar(n) {
-  //   if (n === 0 || n.toString().length === 1) return n;
-
-  //   let [whole, decimal] = n.toString().split(".");
-
-  //   if (decimal[0] < 3) {
-  //     return +decimal;
-  //   } else if (decimal[0] < 8) {
-  //     return +whole + 0.5;
-  //   } else {
-  //     return +whole + 1;
-  //   }
-  // }
-
-  // const setStar = (n) => {
-  //   let number = calculateStar(n);
-  //   let fill = Math.floor(number);
-  //   let half = number - Math.floor(number) ? 1 : 0;
-  //   let outline = 5 - fill - half;
-  //   return [
-  //     ...Array(fill).fill(<FaStar />),
-  //     ...Array(half).fill(<FaStarHalfAlt />),
-  //     ...Array(outline).fill(<FaRegStar />),
-  //   ];
-  // };
+  const [openProductModal, setOpenProductModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
     try {
@@ -59,35 +36,43 @@ const Product = () => {
     }
   }, []);
 
+  const handleProductClick = (product) => {
+    setSelectedProduct(product); // TANLANGAN MAHSULOTNI O'RNATISH
+    setOpenProductModal(true); // MODALNI OCHISH
+  };
+
   return (
     <div className="mx-auto py-5 lg:py-10">
-      {loading && <Skeleton count={1} />}
-      <div className="container">
-        <Swiper
-          loop={true}
-          navigation={true}
-          modules={[Navigation]}
-          className="mySwiper"
-        >
-          {data?.map((pro) => (
-            <SwiperSlide key={pro.id}>
-              <div className="p-3 shadow-lg">
-                <img
-                  className="w-full h-96 lg:h-60 md:h-40 sm:h-32 object-contain"
-                  src={pro.image}
-                  alt=""
-                />
-                <h3 className="text-xl lg:text-2xl font-bold text-center mt-2">
-                  {pro.title}
-                </h3>
-                <div className="text-xl lg:text-2xl text-yellow-500 font-bold py-2 flex justify-center items-center">
-                  <Stars rating={pro.rating.rate} />
-                </div>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+      {loading && <Skeleton count={12} />}
+      <div className="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {data?.map((pro) => (
+          <div className="p-3 shadow-lg" key={pro.id}>
+            <button
+              className="w-full h-96 lg:h-60 md:h-40 sm:h-32"
+              onClick={() => handleProductClick(pro)}
+            >
+              <img
+                className="w-full h-full object-contain"
+                src={pro.image}
+                alt=""
+              />
+            </button>
+            <h3 className="text-xl lg:text-2xl font-bold text-center mt-2">
+              {pro.title}
+            </h3>
+            <div className="text-xl lg:text-2xl text-yellow-500 font-bold py-2 flex justify-center items-center">
+              <Stars rating={pro.rating.rate} />
+            </div>
+          </div>
+        ))}
       </div>
+
+      {/* MODALNI CHAQIRISH */}
+      <Product_Modal
+        isOpen={openProductModal}
+        onClose={() => setOpenProductModal(false)}
+        product={selectedProduct}
+      />
     </div>
   );
 };
